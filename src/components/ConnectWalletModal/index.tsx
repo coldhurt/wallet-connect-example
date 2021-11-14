@@ -22,7 +22,7 @@ import { Col, Modal, Row, Toast } from '@douyinfe/semi-ui'
 import FullButton from '../Button/FullButton'
 
 enum ConnectorNames {
-  Injected = 'Injected',
+  Injected = 'MetaMask',
   WalletConnect = 'WalletConnect',
   Network = 'Network',
   Lattice = 'Lattice',
@@ -46,6 +46,16 @@ const connectorsByName: { [name: string]: any } = {
   [ConnectorNames.Portis]: portis,
   [ConnectorNames.Torus]: torus,
   [ConnectorNames.WalletLink]: walletlink,
+}
+
+const walletImages: { [name: string]: any } = {
+  [ConnectorNames.Injected]: '/images/wallets/metamask.png',
+  [ConnectorNames.WalletConnect]: '/images/wallets/wallet-connect.svg',
+  [ConnectorNames.Lattice]: '/images/wallets/lattice.png',
+  [ConnectorNames.Fortmatic]: '/images/wallets/fortmatic.png',
+  [ConnectorNames.Portis]: '/images/wallets/portis.png',
+  [ConnectorNames.Torus]: '/images/wallets/torus.png',
+  [ConnectorNames.WalletLink]: '/images/wallets/coinbase.svg',
 }
 
 function getErrorMessage(error: Error) {
@@ -98,8 +108,13 @@ const ConnectWalletModal: FC<TConnectWalletModal> = ({ visible, onClose }) => {
   useInactiveListener(!triedEager || !!activatingConnector)
 
   return (
-    <Modal visible={visible} onCancel={onClose} onOk={onClose} footer={null}>
-      <hr style={{ margin: '2rem' }} />
+    <Modal
+      visible={visible}
+      onCancel={onClose}
+      onOk={onClose}
+      footer={null}
+      title='Connect to a wallet'
+    >
       <Row type='flex'>
         {Object.keys(connectorsByName).map((name) => {
           const currentConnector = connectorsByName[name]
@@ -112,19 +127,35 @@ const ConnectWalletModal: FC<TConnectWalletModal> = ({ visible, onClose }) => {
             <Col key={name} style={{ marginBottom: 10 }} span={24}>
               <FullButton
                 type='primary'
+                block={true}
                 loading={activating}
                 disabled={disabled}
+                style={{ justifyContent: 'start' }}
+                iconPosition='right'
+                icon={
+                  walletImages[name] ? (
+                    <img
+                      src={walletImages[name]}
+                      alt={name}
+                      style={{ width: 30 }}
+                    />
+                  ) : null
+                }
                 onClick={() => {
                   setActivatingConnector(currentConnector)
                   activate(connectorsByName[name])
                 }}
               >
-                {name}
-                {connected && (
-                  <span role='img' aria-label='check'>
-                    ✅
-                  </span>
-                )}
+                <Row type='flex' justify='start' style={{ width: 330 }}>
+                  <Col>
+                    {name}
+                    {connected && (
+                      <span role='img' aria-label='check'>
+                        ✅
+                      </span>
+                    )}
+                  </Col>
+                </Row>
               </FullButton>
             </Col>
           )

@@ -3,7 +3,7 @@ import { ButtonProps } from '@douyinfe/semi-ui/lib/es/button/Button'
 import { FC } from 'react'
 
 const FullButton: FC<ButtonProps> = ({ children, ...others }) => (
-  <Button {...others} style={{ width: '100%', height: 40 }}>
+  <Button {...others} style={{ width: '100%', height: 40, ...others.style }}>
     {children}
   </Button>
 )
